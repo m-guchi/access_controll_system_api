@@ -41,7 +41,7 @@ try{
 
 if($sth_user->fetch()["count"]==0){
     $this->code = 400;
-    return $return->set_error("not_in_user_id","this user_id is not exist");
+    return $return->set_error("not_in_login_user_id","this login_user_id is not exist");
 }
 if($sth_gate->fetch()["count"]==0){
     $this->code = 400;
