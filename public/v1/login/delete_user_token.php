@@ -13,7 +13,7 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
 $return = new ApiReturn();
 $body = $this->request_body;
 
-$delete_range_day = (!is_nullorwhitespace_in_array("day",$body) && intval($body["day"])!==0) ? intval($body["day"]) : 3;
+$delete_range_day = (!is_nullorwhitespace_in_array("day",$body) && intval($body["day"])>0) ? intval($body["day"]) : 3;
 
 $now = new DateTimeImmutable();
 $db = new DB();
