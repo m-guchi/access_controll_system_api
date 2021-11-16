@@ -3,10 +3,6 @@
 include_once(__DIR__ . "/../auth/jwt.php");
 include_once(__DIR__."/../auth/certification.php");
 
-use Auth;
-use DB\DB;
-use Auth\Certification;
-
 class LoginController
 {
     public int $code = 200;
