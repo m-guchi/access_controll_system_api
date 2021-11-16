@@ -1,6 +1,5 @@
 <?php
 
-use Ramsey\Uuid\Uuid;
 use Auth\Certification;
 use DB\DB;
 
@@ -92,8 +91,6 @@ if($is_change_data["password"]) $user_data["password"] = password_hash($body["pa
 if($is_change_data["auth_group"]) $user_data["auth_group"] = $body["auth_group"];
 
 try{
-    //ユーザ情報を登録
-    $login_user_id = Uuid::uuid4();
     $password_hash = password_hash($body["password"],PASSWORD_DEFAULT);
 
     $sql = "UPDATE login_users SET login_id = :login_id, login_user_name = :login_user_name, password = :password, auth_group = :auth_group WHERE login_user_id = :login_user_id";
