@@ -29,7 +29,7 @@ class Certification
         $this->header = new Header();
         $this->api_return = new ApiReturn();
 
-        if(!$this->is_exist_jwt_in_cookie()) return false; //cookieにJWTが存在するか
+        if(!$this->is_exist_jwt_in_cookie()) return false; //cookieにtokenが存在するか
         if(!$this->header->is_valid()){
             //header tokenがない場合
             if(!$this->is_token_within_time()) return false; //JWTが有効期限内か
@@ -97,14 +97,14 @@ class Certification
         return true;
     }
 
-    // ■以下、JWTがない場合の処理
+    // ■以下、header tokenがない場合の処理
 
     private function is_token_within_time():bool
     {
         $now = new DateTimeImmutable();
         if($now > $this->jwt->get("exp")){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("timeout_token","this token is expired");
+            $this->return = $this->api_return->set_error("timeout_jwt","this JWT is expired");
             return false;
         }
         return true;
@@ -142,7 +142,7 @@ class Certification
     }
 
 
-    // ■以下、JWTがある場合の処理
+    // ■以下、header tokenがある場合の処理
 
     private function is_match_jwt_and_header():bool
     {
@@ -159,7 +159,7 @@ class Certification
     {
         $db = new DB();
         try{
-            $sql = "SELECT valid_date,login_user_id FROM login_tokens WHERE token = :token AND valid_date > NOW()";
+            $sql = "SELECT valid_date,login_user_id FROM login_tokens WHERE token = :token";
             $sth = $db->pdo->prepare($sql);
             $sth->bindValue(":token",$token);
             $sth->execute();
@@ -172,6 +172,13 @@ class Certification
         if($data===false){
             $this->code = 401;
             $this->return = $this->api_return->set_error("not_in_token","this token is not exist in db");
+            return false;
+        }
+        $now = new DateTimeImmutable();
+        $valid_date = new DateTimeImmutable($data["valid_date"]);
+        if($now > $valid_date){
+            $this->code = 401;
+            $this->return = $this->api_return->set_error("timeout_token","this token is expired");
             return false;
         }
         $this->exp_date = $data["valid_date"];
