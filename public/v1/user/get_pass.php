@@ -4,7 +4,7 @@ use Auth\Certification;
 use DB\DB;
 
 $cert = new Certification();
-if(!$cert->is_continue() || !$cert->authority("users_mgmt")){
+if(!$cert->is_continue()){
     $this->code = $cert->code();
     return $cert->return();
 }
@@ -12,13 +12,19 @@ if(!$cert->is_continue() || !$cert->authority("users_mgmt")){
 $return = new ApiReturn();
 $body = $_GET;
 
+if(is_nullorwhitespace_in_array("user_id",$body)){
+    $this->code = 400;
+    return $return->set_error("invalid_param","require user_id");
+}
+
 $int_next = (!is_nullorwhitespace_in_array("next",$body) && intval($body["next"])>0) ? intval($body["next"]) : 0;
 $int_num = (!is_nullorwhitespace_in_array("num",$body) && intval($body["num"])>0) ? intval($body["num"]) : 100;
 
 $db = new DB();
 try{
-    $sql = "SELECT user_id,area_id,time,attribute_id FROM users ORDER BY time DESC LIMIT :next , :num";
+    $sql = "SELECT time,in_area,out_area FROM users_pass WHERE user_id=:user_id ORDER BY time DESC LIMIT :next , :num";
     $sth = $db->pdo->prepare($sql);
+    $sth->bindValue(":user_id",$body["user_id"]);
     $sth->bindValue(":next",$int_next, PDO::PARAM_INT);
     $sth->bindValue(":num",$int_num, PDO::PARAM_INT);
     $sth->execute();
@@ -28,13 +34,9 @@ try{
 }
 
 $data_count = $sth->rowCount();
-$user_data_list = [];
-foreach($sth->fetchAll() as $user){
-    $user_data_list[$user["user_id"]] = $user;
-}
-
 return $return->set_data([
+    "user_id"=>$body["user_id"],
     "num"=>$data_count,
     "next"=>$int_next+$data_count,
-    "users"=>$user_data_list,
+    "pass"=>$sth->fetchAll()
 ]);
