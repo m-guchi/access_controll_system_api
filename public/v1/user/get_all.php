@@ -27,12 +27,12 @@ try{
     return $return->set_db_error($e);
 }
 
-$data_count = $sth->rowCount();
 $user_data_list = [];
 foreach($sth->fetchAll() as $user){
     $user_data_list[$user["user_id"]] = $user;
 }
 
+$data_count = count($user_data_list);
 return $return->set_data([
     "num"=>$data_count,
     "next"=>$int_next+$data_count,

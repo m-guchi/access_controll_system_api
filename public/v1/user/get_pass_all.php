@@ -27,9 +27,10 @@ try{
     return $return->set_db_error($e);
 }
 
-$data_count = $sth->rowCount();
+$pass_data = $sth->fetchAll();
+$data_count = count($pass_data);
 return $return->set_data([
     "num"=>$data_count,
     "next"=>$int_next+$data_count,
-    "pass"=>$sth->fetchAll()
+    "pass"=>$pass_data,
 ]);
