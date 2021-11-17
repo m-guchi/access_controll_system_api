@@ -31,7 +31,6 @@ class UserController
 
     public function post($arg1=null,$arg2=null):array
     {
-        if(is_nullorwhitespace($arg1)) return include(__DIR__."/../user/post.php");
         if($arg1==="reset") return include(__DIR__."/../user/post_reset.php");
         if($arg1==="attribute"){
             if($arg2==="prefix") return include(__DIR__."/../user/post_attribute_prefix.php");
@@ -42,6 +41,7 @@ class UserController
 
     public function put($arg1=null):array
     {
+        if(is_nullorwhitespace($arg1)) return include(__DIR__."/../user/put.php");
         if($arg1==="attribute") return include(__DIR__."/../user/put_attribute.php");
         $this->code=404;
         return [];
