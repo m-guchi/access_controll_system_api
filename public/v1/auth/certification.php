@@ -43,7 +43,7 @@ class Certification
             //header tokenがある場合
             if(!$this->is_match_jwt_and_header()) return false; //JWTとheaderのtokenが一致するか
             if(!$this->fetch_data_and_is_exist_header_in_db($this->header->token)) return false; //headerのtokenがDBに存在するか
-            if($this->is_token_near_timeout($this->exp_date,'+1 hour')){ //tokenの有効期限が近いか
+            if($this->is_token_near_timeout($this->exp_date,'+4 hour')){ //tokenの有効期限が近いか
                 //tokenを再生成
                 $jwt = new JWT();
                 $jwt_res = $jwt->create_token($this->login_user_id);
