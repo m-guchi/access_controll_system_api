@@ -9,12 +9,11 @@ if(!$cert->is_continue()){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $_GET;
 
 if(is_nullorwhitespace_in_array("user_id",$body)){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require user_id");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require user_id");
 }
 
 $int_next = (!is_nullorwhitespace_in_array("next",$body) && intval($body["next"])>0) ? intval($body["next"]) : 0;
@@ -30,11 +29,11 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $data_count = $sth->rowCount();
-return $return->set_data([
+return $cert->return->set_data([
     "user_id"=>$body["user_id"],
     "num"=>$data_count,
     "next"=>$int_next+$data_count,

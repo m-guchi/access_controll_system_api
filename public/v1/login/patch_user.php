@@ -9,12 +9,11 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 
 if(is_nullorwhitespace_in_array("login_user_id",$body)){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require login_user_id");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require login_user_id");
 }
 
 $is_change_data = [
@@ -30,25 +29,25 @@ if(!is_nullorwhitespace_in_array("password",$body)) $is_change_data["password"] 
 if(!is_nullorwhitespace_in_array("auth_group",$body)) $is_change_data["auth_group"] = true;
 
 if($is_change_data["login_id"] && !is_between_strlen($body["login_id"],1,32)){
-    $this->code = 400;
-    return $return->set_error("invalid_param_length","parameter login_id is 1 to 32");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param_length","parameter login_id is 1 to 32");
 }
 if($is_change_data["login_user_name"] && !is_between_strlen($body["login_user_name"],1,64)){
-    $this->code = 400;
-    return $return->set_error("invalid_param_length","parameter login_user_name is 1 to 64");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param_length","parameter login_user_name is 1 to 64");
 }
 if($is_change_data["password"] && !is_between_strlen($body["password"],1,64)){
-    $this->code = 400;
-    return $return->set_error("invalid_param_length","parameter password is 1 to 64");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param_length","parameter password is 1 to 64");
 }
 if($is_change_data["auth_group"] && !is_between_strlen($body["auth_group"],1,16)){
-    $this->code = 400;
-    return $return->set_error("invalid_param_length","parameter auth_group is 1 to 16");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param_length","parameter auth_group is 1 to 16");
 }
 
 if($is_change_data["auth_group"] && $body["login_user_id"]===$cert->login_user_id){
-    $this->code = 400;
-    return $return->set_error("cannot_change_myself","cannot change authority myself");
+    // $this->code = 400;
+    return $cert->return->set_error("cannot_change_myself","cannot change authority myself");
 }
 
 
@@ -73,18 +72,22 @@ try{
     }
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
+}
+$user_data = $sth_user->fetch();
+if($user_data===false){
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_login_user_id","this login_user_id is not exist");
 }
 if($is_change_data["login_id"] && $sth_user_count->fetch()["count"]>0){
-    $this->code = 400;
-    return $return->set_error("already_login_id","this login_id is already used");
+    // $this->code = 400;
+    return $cert->return->set_error("already_login_id","this login_id is already used");
 }
 if($is_change_data["auth_group"] && $sth_auth->fetch()["count"]==0){
-    $this->code = 400;
-    return $return->set_error("not_in_authority_group","this authority_group is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_authority_group","this authority_group is not exist");
 }
 
-$user_data = $sth_user->fetch();
 if($is_change_data["login_id"]) $user_data["login_id"] = $body["login_id"];
 if($is_change_data["login_user_name"]) $user_data["login_user_name"] = $body["login_user_name"];
 if($is_change_data["password"]) $user_data["password"] = password_hash($body["password"],PASSWORD_DEFAULT);
@@ -103,10 +106,10 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
-return $return->set_data([
+return $cert->return->set_data([
     "login_user_id"=>$body["login_user_id"],
     "login_id"=>$user_data["login_id"],
     "login_user_name"=>$user_data["login_user_name"],

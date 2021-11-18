@@ -27,7 +27,7 @@ class DB
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         }catch(PDOException $error){
             header("Content-Type: application/json; charset=utf-8", true, 500);
-            echo json_encode(["error" => ["type" => "db_error","message"=>$error->getMessage()]]);
+            echo json_encode(["ok"=>false,"token"=>"","error" => ["type" => "db_error","message"=>$error->getMessage()]]);
             die();
         }
         return $pdo;

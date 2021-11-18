@@ -9,15 +9,14 @@ if(!$cert->is_continue() || !$cert->authority("users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $_GET;
 
 if(is_nullorwhitespace_in_array("area_id",$body)
     || is_nullorwhitespace_in_array("start_date",$body)
     || is_nullorwhitespace_in_array("end_date",$body)
 ){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require area_id, start_date and end_date");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require area_id, start_date and end_date");
 }
 
 
@@ -36,14 +35,14 @@ try{
     $sth_beforetime->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $user_list = array_merge(array_column($sth_intime->fetchAll(),"user_id"),array_column($sth_beforetime->fetchAll(),"user_id"));
 $user_list = array_unique($user_list);
 sort($user_list);
 
-return $return->set_data([
+return $cert->return->set_data([
     "area_id"=>$body["area_id"],
     "users"=>array_values($user_list),
 ]);

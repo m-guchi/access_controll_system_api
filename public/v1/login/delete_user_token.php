@@ -10,7 +10,6 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 
 $delete_range_day = (!is_nullorwhitespace_in_array("day",$body) && intval($body["day"])>0) ? intval($body["day"]) : 3;
@@ -25,7 +24,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $this->code = 204;

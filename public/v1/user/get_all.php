@@ -9,7 +9,6 @@ if(!$cert->is_continue() || !$cert->authority("users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $_GET;
 
 $int_next = (!is_nullorwhitespace_in_array("next",$body) && intval($body["next"])>0) ? intval($body["next"]) : 0;
@@ -24,7 +23,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $user_data_list = [];
@@ -33,7 +32,7 @@ foreach($sth->fetchAll() as $user){
 }
 
 $data_count = count($user_data_list);
-return $return->set_data([
+return $cert->return->set_data([
     "num"=>$data_count,
     "next"=>$int_next+$data_count,
     "users"=>$user_data_list,

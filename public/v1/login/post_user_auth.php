@@ -9,13 +9,12 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 if(is_nullorwhitespace_in_array("auth_group",$body)
     || is_nullorwhitespace_in_array("auth_name",$body)
 ){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require auth_group and auth_name");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require auth_group and auth_name");
 }
 
 
@@ -32,12 +31,12 @@ try{
     $sth_auth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 if($sth_auth_name->fetch()["count"]==0){
-    $this->code = 400;
-    return $return->set_error("not_in_auth_name","this auth_name is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_auth_name","this auth_name is not exist");
 }
 
 if($sth_auth->fetch()["count"]==0){
@@ -49,11 +48,11 @@ if($sth_auth->fetch()["count"]==0){
         $sth->execute();
     }catch(PDOException $e){
         $this->code = 500;
-        return $return->set_db_error($e);
+        return $cert->return->set_db_error($e);
     }
 }
 
-return $return->set_data([
+return $cert->return->set_data([
     "auth_group"=>$body["auth_group"],
     "auth_name"=>$body["auth_name"],
 ]);

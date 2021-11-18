@@ -9,7 +9,6 @@ if(!$cert->is_continue() || !$cert->authority("log_watcher")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $_GET;
 
 $int_next = (!is_nullorwhitespace_in_array("next",$body) && intval($body["next"])>0) ? intval($body["next"]) : 0;
@@ -24,12 +23,12 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $pass_data = $sth->fetchAll();
 $data_count = count($pass_data);
-return $return->set_data([
+return $cert->return->set_data([
     "num"=>$data_count,
     "next"=>$int_next+$data_count,
     "pass"=>$pass_data,

@@ -9,13 +9,12 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 if(is_nullorwhitespace_in_array("auth_group",$body)
     || is_nullorwhitespace_in_array("auth_name",$body)
 ){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require auth_group and auth_name");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require auth_group and auth_name");
 }
 
 $db = new DB();
@@ -26,7 +25,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 if($sth->fetch()["count"]==1){
@@ -37,12 +36,12 @@ if($sth->fetch()["count"]==1){
         $sth->execute();
     }catch(PDOException $e){
         $this->code = 500;
-        return $return->set_db_error($e);
+        return $cert->return->set_db_error($e);
     }
 
     if($sth->fetch()["count"]>0){
-        $this->code = 400;
-        return $return->set_error("cannot_delete_last_auth_group","cannot delete current auth group because exist login user having this group");
+        // $this->code = 400;
+        return $cert->return->set_error("cannot_delete_last_auth_group","cannot delete current auth group because exist login user having this group");
     }
 }
 
@@ -55,7 +54,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $this->code = 204;

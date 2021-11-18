@@ -1,6 +1,5 @@
 <?php
 
-include_once(__DIR__ . "/../auth/jwt.php");
 include_once(__DIR__."/../auth/certification.php");
 
 class UserController

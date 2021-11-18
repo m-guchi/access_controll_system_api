@@ -9,13 +9,12 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 if(is_nullorwhitespace_in_array("login_user_id",$body)
     || is_nullorwhitespace_in_array("gate_id",$body)
 ){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require login_user_id and gate_id");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require login_user_id and gate_id");
 }
 
 
@@ -36,16 +35,16 @@ try{
     $sth_range_gate->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 if($sth_user->fetch()["count"]==0){
-    $this->code = 400;
-    return $return->set_error("not_in_login_user_id","this login_user_id is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_login_user_id","this login_user_id is not exist");
 }
 if($sth_gate->fetch()["count"]==0){
-    $this->code = 400;
-    return $return->set_error("not_in_gate_id","this gate_id is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_gate_id","this gate_id is not exist");
 }
 
 if($sth_range_gate->fetch()["count"]==0){
@@ -57,11 +56,11 @@ if($sth_range_gate->fetch()["count"]==0){
         $sth->execute();
     }catch(PDOException $e){
         $this->code = 500;
-        return $return->set_db_error($e);
+        return $cert->return->set_db_error($e);
     }
 }
 
-return $return->set_data([
+return $cert->return->set_data([
     "login_user_id"=>$body["login_user_id"],
     "gate_id"=>$body["gate_id"],
 ]);

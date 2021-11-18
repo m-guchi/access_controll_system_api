@@ -16,18 +16,17 @@ class Certification
     private jwt $jwt;
     private header $header;
     private int $code = 200;
-    private array $return = [];
-    private $api_return;
+    private array $return_array = [];
     private bool $is_continue = false;
     public ?string $login_user_id = null;
-
+    public apireturn $return;
     public ?string $new_token = null;
 
     function __construct()
     {
         $this->jwt = new JWT();
         $this->header = new Header();
-        $this->api_return = new ApiReturn();
+        $this->return = new ApiReturn();
 
         if(!$this->is_exist_jwt_in_cookie()) return false; //cookieにtokenが存在するか
         if(!$this->header->is_valid()){
@@ -36,8 +35,8 @@ class Certification
             if(!$this->is_fetch_token_from_db_where_token_id($this->jwt->get("token_id"))) return false; //DBに接続できるか(↓用)
             if(!$this->is_token_data_exist()) return false; //JWTのtokenがDBに存在するか
             $this->code = 401;
-            $this->api_return->set_token($this->login_data["token"]);
-            $this->return = $this->api_return->set_error("need_this_token","request again with this token");
+            $this->return->set_token($this->login_data["token"]);
+            $this->return_array = $this->return->set_error("need_this_token","request again with this token");
             return false;
         }else{
             //header tokenがある場合
@@ -45,15 +44,14 @@ class Certification
             if(!$this->fetch_data_and_is_exist_header_in_db($this->header->token)) return false; //headerのtokenがDBに存在するか
             if($this->is_token_near_timeout($this->exp_date,'+4 hour')){ //tokenの有効期限が近いか
                 //tokenを再生成
-                $jwt = new JWT();
-                $jwt_res = $jwt->create_token($this->login_user_id);
-                if(!$jwt->insert_token($jwt_res, $this->login_user_id)){
+                $jwt_res = $this->jwt->create_token($this->login_user_id);
+                if(!$this->jwt->insert_token($jwt_res, $this->login_user_id)){
                     $this->code = 500;
-                    $this->return = $jwt->error_msg;
+                    $this->return_array = $this->jwt->error_msg;
                     return false;
                 }
 
-                $this->api_return->set_token($jwt_res["token"]);
+                $this->return->set_token($jwt_res["token"]);
             }
             $this->is_continue = true; 
             return true;
@@ -72,7 +70,7 @@ class Certification
 
     public function return():array
     {
-        return $this->return;
+        return $this->return_array;
     }
 
     public function authority($key):bool
@@ -81,7 +79,7 @@ class Certification
         if(!$this->is_authority_in_db($key)) return false;
         if($this->is_permit_auth===0){
             $this->code = 403;
-            $this->return = $this->api_return->set_error("no_permission","does not have necessary permissions");
+            $this->return_array = $this->return->set_error("no_permission","does not have necessary permissions");
             return false;
         }
         return true;
@@ -91,7 +89,7 @@ class Certification
     {
         if(!$this->jwt->is_valid()){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("not_in_jwt","require jwt in cookies");
+            $this->return_array = $this->return->set_error("not_in_jwt","require jwt in cookies");
             return false;
         }
         return true;
@@ -104,7 +102,7 @@ class Certification
         $now = new DateTimeImmutable();
         if($now > $this->jwt->get("exp")){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("timeout_jwt","this JWT is expired");
+            $this->return_array = $this->return->set_error("timeout_jwt","this JWT is expired");
             return false;
         }
         return true;
@@ -121,7 +119,7 @@ class Certification
             $sth->execute();
         }catch(PDOException $e){
             $this->code = 500;
-            $this->return = $this->api_return->set_db_error($e);
+            $this->return_array = $this->return->set_db_error($e);
             return false;
         }
         $data = $sth->fetch();
@@ -133,7 +131,7 @@ class Certification
     {
         if(is_null($this->login_data)){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("not_in_token_id","this token id is not exist or expired in db");
+            $this->return_array = $this->return->set_error("not_in_token_id","this token id is not exist or expired in db");
             return false;
         }else{
             $this->login_user_id = $this->login_data["login_user_id"];
@@ -148,7 +146,7 @@ class Certification
     {
         if(!password_verify($this->header->token, $this->jwt->get("token"))){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("invalid_token","header token is not match jwt token");
+            $this->return_array = $this->return->set_error("invalid_token","header token is not match jwt token");
             return false;
         }
         return true;
@@ -165,20 +163,20 @@ class Certification
             $sth->execute();
         }catch(PDOException $e){
             $this->code = 500;
-            $this->return = $this->api_return->set_db_error($e);
+            $this->return_array = $this->return->set_db_error($e);
             return false;
         }
         $data = $sth->fetch();
         if($data===false){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("not_in_token","this token is not exist in db");
+            $this->return_array = $this->return->set_error("not_in_token","this token is not exist in db");
             return false;
         }
         $now = new DateTimeImmutable();
         $valid_date = new DateTimeImmutable($data["valid_date"]);
         if($now > $valid_date){
             $this->code = 401;
-            $this->return = $this->api_return->set_error("timeout_token","this token is expired");
+            $this->return_array = $this->return->set_error("timeout_token","this token is expired");
             return false;
         }
         $this->exp_date = $data["valid_date"];
@@ -206,7 +204,7 @@ class Certification
             $sth->execute();
         }catch(PDOException $e){
             $this->code = 500;
-            $this->return = fatal_error($e);
+            $this->return_array = $this->return->set_db_error($e);
             return false;
         }
         $this->is_permit_auth = count($sth->fetchAll());

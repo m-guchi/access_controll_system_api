@@ -9,17 +9,16 @@ if(!$cert->is_continue() || !$cert->authority("login_users_mgmt")){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 
 if(is_nullorwhitespace_in_array("login_user_id",$body)){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require login_user_id");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require login_user_id");
 }
 
 if($cert->login_user_id===$body["login_user_id"]){
-    $this->code = 400;
-    return $return->set_error("cannot_delete_user","cannot delete current login user");
+    // $this->code = 400;
+    return $cert->return->set_error("cannot_delete_user","cannot delete current login user");
 }
 
 $db = new DB();
@@ -30,7 +29,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $this->code = 204;

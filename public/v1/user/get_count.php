@@ -9,7 +9,6 @@ if(!$cert->is_continue()){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $_GET;
 
 $db = new DB();
@@ -22,7 +21,7 @@ try{
     $sth_att->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $count_data = [];
@@ -36,4 +35,4 @@ foreach($sth_att->fetchAll() as $data){
     $count_data[$data["area_id"]]["attribute"][$data["attribute_id"]] = $data["count"];
 }
 
-return $return->set_data($count_data);
+return $cert->return->set_data($count_data);

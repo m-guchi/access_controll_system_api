@@ -10,14 +10,13 @@ if(!$cert->is_continue()){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $this->request_body;
 if((is_nullorwhitespace_in_array("user_id",$body)
     && is_nullorwhitespace_in_array("ticket_id",$body))
     || is_nullorwhitespace_in_array("gate_id",$body)
 ){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require user_id or ticket_id, and gate_id");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require user_id or ticket_id, and gate_id");
 }
 
 $not_exist_user_id = is_nullorwhitespace_in_array("user_id",$body);
@@ -36,19 +35,19 @@ try{
     $sth_gate->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 if($not_exist_user_id){
     $user_data = $sth_user->fetch();
     if($user_data===false){
-    $this->code = 400;
-    return $return->set_error("not_in_ticket_id","this ticket_id is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_ticket_id","this ticket_id is not exist");
     }
 }
 $gate_data = $sth_gate->fetch();
 if($gate_data===false){
-    $this->code = 400;
-    return $return->set_error("not_in_gate_id","this gate_id is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_gate_id","this gate_id is not exist");
 }
 
 $user_id = $not_exist_user_id ? $user_data["user_id"] : $body["user_id"];
@@ -66,7 +65,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 try{
@@ -83,7 +82,7 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 if($sth->rowCount()===0){
@@ -97,11 +96,11 @@ if($sth->rowCount()===0){
         $sth->execute();
     }catch(PDOException $e){
         $this->code = 500;
-        return $return->set_db_error($e);
+        return $cert->return->set_db_error($e);
     }
 }
 
-return $return->set_data([
+return $cert->return->set_data([
     "user_id"=>$user_id,
     "gate_id"=>$body["gate_id"],
     "in_area"=>$gate_data["in_area"],

@@ -50,11 +50,13 @@ class ApiReturn
     {
         if($this->is_error){
             return [
+                "ok"=>false,
                 "token"=>$this->token,
                 "error"=>$this->err,
             ];
         }else{
             return [
+                "ok"=>true,
                 "token"=>$this->token,
                 "data"=>$this->data,
             ];

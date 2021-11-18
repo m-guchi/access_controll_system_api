@@ -4,7 +4,6 @@ use Auth\Certification;
 use DB\DB;
 
 $cert = new Certification();
-$return = new ApiReturn();
 
 if(!$cert->is_continue()){
     $this->code = $cert->code();
@@ -26,7 +25,7 @@ try{
 }catch(PDOException $e){
     $db->pdo->rollBack();
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $login_user_data = $sth_user->fetch();
@@ -35,4 +34,4 @@ $login_user_data["gate_id_list"] = array_reduce($sth_gate->fetchAll(), function(
     return $carry;
 }, []);
 
-return $return->set_data($login_user_data);
+return $cert->return->set_data($login_user_data);

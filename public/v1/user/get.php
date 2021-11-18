@@ -9,12 +9,11 @@ if(!$cert->is_continue()){
     return $cert->return();
 }
 
-$return = new ApiReturn();
 $body = $_GET;
 
 if(is_nullorwhitespace_in_array("user_id",$body)){
-    $this->code = 400;
-    return $return->set_error("invalid_param","require user_id");
+    // $this->code = 400;
+    return $cert->return->set_error("invalid_param","require user_id");
 }
 
 $db = new DB();
@@ -25,14 +24,14 @@ try{
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
-    return $return->set_db_error($e);
+    return $cert->return->set_db_error($e);
 }
 
 $user_data = $sth->fetch();
 
 if($user_data===false){
-    $this->code = 400;
-    return $return->set_error("not_in_user_id","this user_id is not exist");
+    // $this->code = 400;
+    return $cert->return->set_error("not_in_user_id","this user_id is not exist");
 }
 
-return $return->set_data($user_data);
+return $cert->return->set_data($user_data);

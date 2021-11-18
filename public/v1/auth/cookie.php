@@ -4,7 +4,7 @@ namespace Auth;
 
 class Cookie
 {
-    public string $cookie_name = "emgmt_1112";
+    public string $cookie_name = "emgmt_1118";
     private string $path = "/";
     private bool $secure = false;
     private bool $httponly = true;
