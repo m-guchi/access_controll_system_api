@@ -30,6 +30,6 @@ $pass_data = $sth->fetchAll();
 $data_count = count($pass_data);
 return $cert->return->set_data([
     "num"=>$data_count,
-    "next"=>$int_next+$data_count,
+    "next"=>($data_count>$int_num)?$int_next+$data_count:false,
     "pass"=>$pass_data,
 ]);

@@ -32,10 +32,11 @@ try{
     return $cert->return->set_db_error($e);
 }
 
-$data_count = $sth->rowCount();
+$pass_data = $sth->fetchAll();
+$data_count = count($pass_data);
 return $cert->return->set_data([
     "user_id"=>$body["user_id"],
     "num"=>$data_count,
-    "next"=>$int_next+$data_count,
-    "pass"=>$sth->fetchAll()
+    "next"=>($data_count===$int_num)?$int_next+$data_count:false,
+    "pass"=>$pass_data
 ]);

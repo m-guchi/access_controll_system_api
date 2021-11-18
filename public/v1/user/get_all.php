@@ -34,6 +34,6 @@ foreach($sth->fetchAll() as $user){
 $data_count = count($user_data_list);
 return $cert->return->set_data([
     "num"=>$data_count,
-    "next"=>$int_next+$data_count,
+    "next"=>($data_count===$int_num)?$int_next+$data_count:false,
     "users"=>$user_data_list,
 ]);
