@@ -22,11 +22,14 @@ try{
     $sth_gate = $db->pdo->prepare($sql);
     $sth_gate->execute();
     $sql = "SELECT * FROM login_auth_list ORDER BY auth_name ASC";
-    $sth_auth = $db->pdo->prepare($sql);
-    $sth_auth->execute();
+    $sth_auth_list = $db->pdo->prepare($sql);
+    $sth_auth_list->execute();
     $sql = "SELECT * FROM attribute_list ORDER BY attribute_id ASC";
     $sth_att_list = $db->pdo->prepare($sql);
     $sth_att_list->execute();
+    $sql = "SELECT * FROM login_auth_group ORDER BY auth_name ASC";
+    $sth_auth_group = $db->pdo->prepare($sql);
+    $sth_auth_group->execute();
     $sql = "SELECT * FROM attribute_prefix ORDER BY attribute_id ASC, prefix ASC";
     $sth_att_prefix = $db->pdo->prepare($sql);
     $sth_att_prefix->execute();
@@ -48,6 +51,7 @@ return $cert->return->set_data([
     "area"=>$sth_area->fetchAll(),
     "gate"=>$sth_gate->fetchAll(),
     "setting"=>$sth_setting->fetchAll(),
-    "auth"=>$sth_auth->fetchAll(),
+    "auth_list"=>$sth_auth_list->fetchAll(),
+    "auth_group"=>$sth_auth_group->fetchAll(),
     "attribute"=>$att_list,
 ]);
