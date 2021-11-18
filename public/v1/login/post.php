@@ -7,7 +7,7 @@ $body = $this->request_body;
 if(is_nullorwhitespace_in_array("login_id",$body)
     || is_nullorwhitespace_in_array("password",$body)
 ){
-    $this->code = 400;
+    // $this->code = 400;
     return $return->set_error("invalid_param","require login_id and password");
 }
 
