@@ -4,11 +4,6 @@ function get_url(){
     return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
 }
 
-function fatal_error($msg){
-    $return = new ApiReturn();
-    return $return->set_error("fatal_db_error",$msg);
-}
-
 function is_between_strlen($str,$min,$max){
     return !(strlen($str)<$min || $max<strlen($str));
 }
