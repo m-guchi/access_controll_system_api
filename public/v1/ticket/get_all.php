@@ -4,7 +4,7 @@ use Auth\Certification;
 use DB\DB;
 
 $cert = new Certification();
-if(!$cert->is_continue() || !$cert->authority("log_watcher")){
+if(!$cert->is_continue() || !$cert->authority("users_mgmt")){
     $this->code = $cert->code();
     return $cert->return();
 }
