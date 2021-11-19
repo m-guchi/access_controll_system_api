@@ -39,19 +39,42 @@ try{
     return $cert->return->set_db_error($e);
 }
 
+$setting_list = [];
+foreach($sth_setting->fetchAll() as $setting){
+    $setting_list[$setting["id"]] = $setting;
+}
+
+$area_list = [];
+foreach($sth_area->fetchAll() as $area){
+    $area_list[$area["area_id"]] = $area;
+}
+
+$gate_list = [];
+foreach($sth_gate->fetchAll() as $gate){
+    $gate_list[$gate["gate_id"]] = $gate;
+}
+
+$auth_group_list = [];
+foreach($sth_auth_group->fetchAll() as $auth){
+    $auth_group_list[$auth["auth_group"]][] = $auth["auth_name"];
+}
+
+$attribute_list = [];
 $att_list = $sth_att_list->fetchAll();
-$att_list_id = array_column($att_list, "attribute_id");
+foreach($att_list as $att){
+    $attribute_list[$att["attribute_id"]] = $att;
+}
 foreach($sth_att_prefix as $val){
-    $index = array_search($val["attribute_id"],$att_list_id);
-    $att_list[$index]["prefix"][] = $val["prefix"];
+    $attribute_list[$val["attribute_id"]]["prefix"][] = $val["prefix"];
 }
 
 
+
 return $cert->return->set_data([
-    "area"=>$sth_area->fetchAll(),
-    "gate"=>$sth_gate->fetchAll(),
-    "setting"=>$sth_setting->fetchAll(),
+    "area"=>$area_list,
+    "gate"=>$gate_list,
+    "setting"=>$setting_list,
     "auth_list"=>$sth_auth_list->fetchAll(),
-    "auth_group"=>$sth_auth_group->fetchAll(),
-    "attribute"=>$att_list,
+    "auth_group"=>$auth_group_list,
+    "attribute"=>$attribute_list,
 ]);
