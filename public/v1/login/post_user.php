@@ -31,8 +31,7 @@ if(!is_between_strlen($body["password"],1,64)){
     // $this->code = 400;
     return $cert->return->set_error("invalid_param_length","parameter password is 1 to 64");
 }
-$is_set_auth = !is_nullorempty_in_array("auth_group",$body);
-if($is_set_auth && !is_between_strlen($body["auth_group"],1,16)){
+if(!is_between_strlen($body["auth_group"],1,16)){
     // $this->code = 400;
     return $cert->return->set_error("invalid_param_length","parameter auth_group is 1 to 16");
 }
@@ -56,7 +55,7 @@ if($sth_user->fetch()["count"]>0){
     // $this->code = 400;
     return $cert->return->set_error("already_login_id","this login_id is already used");
 }
-if($is_set_auth && $sth_auth->fetch()["count"]==0){
+if($sth_auth->fetch()["count"]==0){
     // $this->code = 400;
     return $cert->return->set_error("not_in_authority_group","this authority_group is not exist");
 }
@@ -72,7 +71,7 @@ try{
     $sth->bindValue(":login_id",$body["login_id"]);
     $sth->bindValue(":login_user_name",$body["login_user_name"]);
     $sth->bindValue(":password",$password_hash);
-    $sth->bindValue(":auth_group",$is_set_auth?$body["auth_group"]:null);
+    $sth->bindValue(":auth_group",$body["auth_group"]);
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
