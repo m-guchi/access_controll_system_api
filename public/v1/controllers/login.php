@@ -31,6 +31,7 @@ class LoginController
         if($arg1==="user"){
             if(is_nullorwhitespace($arg2)) return include(__DIR__."/../login/post_user.php");
             if($arg2==="gate") return include(__DIR__."/../login/post_user_gate.php");
+            if($arg2==="auth") return include(__DIR__."/../login/post_user_auth.php");
         }
         $this->code=404;
         return [];
