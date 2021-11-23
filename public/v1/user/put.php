@@ -5,7 +5,7 @@ use Auth\Certification;
 use DB\DB;
 
 $cert = new Certification();
-if(!$cert->is_continue()){
+if(!$cert->is_continue() || !$cert->authority("record_user_pass")){
     $this->code = $cert->code();
     return $cert->return();
 }
@@ -40,8 +40,16 @@ try{
 if($not_exist_user_id){
     $user_data = $sth_user->fetch();
     if($user_data===false){
-    // $this->code = 400;
-    return $cert->return->set_error("not_in_ticket_id","this ticket_id is not exist");
+        // $this->code = 400;
+        return $cert->return->set_error("not_in_ticket_id","this ticket_id is not exist");
+    }else{
+        if(!is_between_strlen($body["ticket_id"],1,32)){
+            return $cert->return->set_error("invalid_param_length","parameter ticket_id is 1 to 32");
+        }
+    }
+}else{
+    if(!is_between_strlen($body["user_id"],1,32)){
+        return $cert->return->set_error("invalid_param_length","parameter user_id is 1 to 32");
     }
 }
 $gate_data = $sth_gate->fetch();
