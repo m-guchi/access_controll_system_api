@@ -33,7 +33,7 @@ try{
 
 if($sth->rowCount()===0){
     try{
-        $sql = "INSERT INTO users (user_id, ticket_id, time) VALUES (:user_id, :ticket_id, :time)";
+        $sql = "INSERT INTO tickets (user_id, ticket_id, time) VALUES (:user_id, :ticket_id, :time)";
         $sth = $db->pdo->prepare($sql);
         $sth->bindValue(":user_id",$user_id);
         $sth->bindValue(":ticket_id",$body["ticket_id"]);
