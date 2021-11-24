@@ -29,9 +29,5 @@ try{
 }
 
 $login_user_data = $sth_user->fetch();
-$login_user_data["gate_id_list"] = array_reduce($sth_gate->fetchAll(), function($carry, $item){
-    $carry[] = $item["gate_id"];
-    return $carry;
-}, []);
 
 return $cert->return->set_data($login_user_data);
