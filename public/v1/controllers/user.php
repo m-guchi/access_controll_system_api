@@ -49,9 +49,14 @@ class UserController
     public function delete($arg1=null,$arg2=null):array
     {
         if(is_nullorwhitespace($arg1)) return include(__DIR__."/../user/delete.php");
+        if($arg1==="old") return include(__DIR__."/../user/delete_old.php");
         if($arg1==="attribute"){
             if(is_nullorwhitespace($arg2)) return include(__DIR__."/../user/delete_attribute.php");
             if($arg2==="prefix") return include(__DIR__."/../user/delete_attribute_prefix.php");
+        }
+        if($arg1==="pass"){
+            if(is_nullorwhitespace($arg2)) return include(__DIR__."/../user/delete_pass.php");
+            if($arg2==="old") return include(__DIR__."/../user/delete_pass_old.php");
         }
         $this->code=404;
         return [];
