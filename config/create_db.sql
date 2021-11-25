@@ -63,8 +63,8 @@ INSERT INTO `setting` (`id`, `value`, `description`) VALUES
 ('log_user_pass_fetch_max', '10000', '受付通過情報のデータ取得数'),
 ('ticket_prefix', 'T', 'チケットの先頭文字列　※複数ある場合は、コンマ \",\" で区切る'),
 ('use_ticket', '1', '0:チケットを使用しない / 1:チケットを使用する　※チケットをユーザーIDと紐付けることで、チケットで入退場管理ができるようになる。　※使用する場合は、ticket_prefixに値を使用する'),
-('user_count_red_rate', '100', ''),
-('user_count_yellow_rate', '80', '');
+('user_count_red_rate', '100', '会場内人数の表示画面にて、定員に対する割合がこの値(%)を超えると、赤色に変化します'),
+('user_count_yellow_rate', '80', '会場内人数の表示画面にて、定員に対する割合がこの値(%)を超えると、黄色に変化します');
 
 CREATE TABLE `setting_area` (
   `area_id` varchar(8) NOT NULL,
