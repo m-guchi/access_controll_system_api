@@ -22,10 +22,9 @@ try{
     $sth = $db->pdo->prepare($sql);
     $sth->bindValue(":time",$delete_date->format('Y-m-d H:i:s'));
     $sth->execute();
-    $sql = "UPDATE tickets SET user_id = :user_id WHERE time < :time";
+    $sql = "DELETE FROM tickets WHERE time < :time";
     $sth = $db->pdo->prepare($sql);
     $sth->bindValue(":time",$delete_date->format('Y-m-d H:i:s'));
-    $sth->bindValue(":user_id",null);
     $sth->execute();
 }catch(PDOException $e){
     $this->code = 500;
