@@ -28,10 +28,10 @@ CREATE TABLE `login_auth_list` (
 );
 
 INSERT INTO `login_auth_list` (`auth_name`, `description`) VALUES
-('login_users_mgmt', 'ログインユーザーの管理'),
-('record_user_pass', '通過情報の登録'),
-('setting_mgmt', '設定の管理'),
-('users_mgmt', 'ユーザーの管理');
+('login_users_mgmt', 'ログインユーザー'),
+('record_user_pass', '通過情報'),
+('setting_mgmt', '設定'),
+('users_mgmt', 'ユーザー');
 
 CREATE TABLE `login_tokens` (
   `token_id` varchar(64) NOT NULL,
