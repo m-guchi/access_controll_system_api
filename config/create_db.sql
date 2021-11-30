@@ -49,7 +49,7 @@ CREATE TABLE `login_users` (
 );
 
 INSERT INTO `login_users` (`login_user_id`, `login_id`, `login_user_name`, `password`, `auth_group`) VALUES
-('loginuseridguchimina', 'minamiguchi', '南口和生', '$2y$10$PgR.bZmnvRYi8GKYg0TL7eiKPCCfeWKjIHWUhtswXl/nWXGN1vLJC', 'admin');
+('e5175450-c18f-4657-b2c6-240cdf1f97a4', 'test', 'テストユーザー', '$2y$10$/3gpvodYPTmBo2mMqbJDleDZoyZKk2eldKqqa4Um5RUBukoPgYd.q', 'admin');
 
 CREATE TABLE `setting` (
   `id` varchar(64) NOT NULL,
