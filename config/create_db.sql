@@ -30,7 +30,7 @@ CREATE TABLE `login_auth_list` (
 INSERT INTO `login_auth_list` (`auth_name`, `description`) VALUES
 ('login_users_mgmt', 'ログインユーザーの管理'),
 ('record_user_pass', '通過情報の登録'),
-('setting_mgmt', '各種設定の管理'),
+('setting_mgmt', '設定の管理'),
 ('users_mgmt', 'ユーザーの管理');
 
 CREATE TABLE `login_tokens` (
