@@ -1,4 +1,3 @@
-
 CREATE TABLE `attribute_list` (
   `attribute_id` varchar(8) NOT NULL,
   `attribute_name` varchar(32) NOT NULL,
@@ -142,4 +141,5 @@ ALTER TABLE `tickets`
 
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
+
 COMMIT;
