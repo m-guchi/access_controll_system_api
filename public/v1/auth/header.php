@@ -31,8 +31,13 @@ class Header
     public function get_token():?string
     {
         $headers = getallheaders();
-        if(is_nullorwhitespace_in_array("token",$headers)) return null;
-        return $headers["token"];
+        if(!is_nullorwhitespace_in_array("token",$headers)){
+            return $headers["token"];
+        }else if(!is_nullorwhitespace_in_array("Token",$headers)){
+            return $headers["Token"];
+        }else{
+            return null;
+        }
     }
 
 }
