@@ -1,6 +1,7 @@
 {
     "require": {
         "ramsey/uuid": "^4.2",
-        "lcobucci/jwt": "^4.1"
+        "lcobucci/jwt": "^4.1",
+        "symfony/yaml": "^5.4"
     }
 }
