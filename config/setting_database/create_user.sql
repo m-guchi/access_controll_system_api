@@ -1,4 +1,4 @@
-CREATE USER 'e_mgmt_user'@'localhost' IDENTIFIED BY 'DYVO0rCEcIkyX8kmrfzgvmOg';
-GRANT SELECT, INSERT, UPDATE, DELETE ON e_mgmt.* to e_mgmt_user@localhost;
+CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'DYVO0rCEcIkyX8kmrfzgvmOg';
+GRANT SELECT, INSERT, UPDATE, DELETE ON app_access_controll_system.* to test_user@localhost;
 
 COMMIT;
