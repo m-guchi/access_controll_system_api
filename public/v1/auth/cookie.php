@@ -6,7 +6,7 @@ class Cookie
 {
     public string $cookie_name = "e_mgmt";
     private string $path = "/";
-    private bool $secure = false;
+    private bool $secure = true;
     private bool $httponly = true;
 
     private function cookie_option():array
